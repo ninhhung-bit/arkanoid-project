@@ -82,8 +82,8 @@ public class Game extends JPanel implements ActionListener {
                 b.setDestroyed(true);
                 ball.bounceOff(b);
 
-                // 30% chance to drop a power-up
-                if (Math.random() < 0.3) {
+                // 20% tỉ lệ rơi power-up
+                if (Math.random() < 0.2) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
