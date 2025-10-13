@@ -1,3 +1,4 @@
+//Tam thoi chua dung duoc, powerup loi, update sau.
 public abstract class MovableObject extends GameObject {
     private double dx;
     private double dy;
