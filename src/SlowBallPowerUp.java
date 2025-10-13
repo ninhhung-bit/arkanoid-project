@@ -21,7 +21,7 @@ public class SlowBallPowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(0, 150, 255);
+        rd.setColor(0, 255, 255); // Xanh ngọc
         rd.fillCircle(getX(), getY(), getWidth() / 2);
     }
 }

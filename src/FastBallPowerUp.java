@@ -21,7 +21,7 @@ public class FastBallPowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(255, 0, 0); // đỏ cho fastball
+        rd.setColor(255, 0, 0); // Đỏ
         rd.fillCircle(getX(), getY(), getWidth() / 2);
     }
 }

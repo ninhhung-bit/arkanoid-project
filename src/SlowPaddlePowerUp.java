@@ -22,7 +22,7 @@ public class SlowPaddlePowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(150, 150, 255); // Tím nhạt
+        rd.setColor(255, 255, 0); // Vàng
         rd.fillRect(getX(), getY(), getWidth(), getHeight());
     }
 }

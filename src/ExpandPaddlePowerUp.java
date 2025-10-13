@@ -20,7 +20,7 @@ public class ExpandPaddlePowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(0, 150, 255); // xanh dương
+        rd.setColor(0, 255, 0); // Xanh lá
         rd.fillRect(getX(), getY(), getWidth(), getHeight());
     }
 }

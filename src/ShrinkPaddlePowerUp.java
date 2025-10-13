@@ -20,7 +20,7 @@ public class ShrinkPaddlePowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(255, 100, 100); // Đỏ nhạt
+        rd.setColor(255, 0, 255); // Hồng tím
         rd.fillRect(getX(), getY(), getWidth(), getHeight());
     }
 }

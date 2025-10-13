@@ -22,7 +22,7 @@ public class SpeedUpPaddlePowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(255, 255, 0); // Vàng
+        rd.setColor(0, 0, 255); // Xanh dương
         rd.fillRect(getX(), getY(), getWidth(), getHeight());
     }
 }
