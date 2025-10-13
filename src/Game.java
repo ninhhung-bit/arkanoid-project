@@ -113,9 +113,9 @@ public class Game extends JPanel implements ActionListener {
                         case 5:
                             powerUp = new SlowBallPowerUp(brickX, brickY);
                             break;
-                        case 6:
-                            powerUp = new MultiBallPowerUp(brickX, brickY);
-                            break;
+                        //case 6:
+                        //    powerUp = new MultiBallPowerUp(brickX, brickY);
+                        //    break;
                         default:
                             powerUp = null; // dự phòng
                             break;
