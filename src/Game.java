@@ -33,13 +33,17 @@ public class Game extends JPanel implements ActionListener {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT) paddle.setDx(-paddle.getSpeed());
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) paddle.setDx(paddle.getSpeed());
+                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) paddle.setDx(-paddle.getSpeed());
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) paddle.setDx(paddle.getSpeed());
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) paddle.setDx(0);
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT 
+                        || key == KeyEvent.VK_A || key == KeyEvent.VK_D) {
+                    paddle.setDx(0);
+                }
             }
         });
     }
