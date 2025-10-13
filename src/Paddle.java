@@ -73,10 +73,10 @@ public class Paddle extends MovableObject {
                 width = Math.max(width * 0.75, minWidth);
                 break;
             case "speedup":
-                speed *= 1.2;
+                speed *= 2;
                 break;
             case "slow":
-                speed *= 0.8;
+                speed *= 0.5;
                 break;
             case "reset":
                 resetPaddle();
@@ -86,7 +86,7 @@ public class Paddle extends MovableObject {
 
     public void resetPaddle() {
         width = baseWidth;
-        speed = 300;
+        speed = 500;
         setX(screenWidth / 2 - getWidth() / 2);
         setY(screenHeight - 50);
         currentPowerUp = null;
