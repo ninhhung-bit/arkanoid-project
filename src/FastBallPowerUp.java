@@ -1,5 +1,5 @@
 public class FastBallPowerUp extends PowerUp {
-    private static final double speedMultiplier = 1.5;
+    private static final double speedMultiplier = 2;
 
     public FastBallPowerUp(double x, double y) {
         super(x, y, 20, 20, "speedup", 5.0);

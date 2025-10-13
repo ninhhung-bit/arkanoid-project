@@ -40,7 +40,7 @@ public class Game extends JPanel implements ActionListener {
             @Override
             public void keyReleased(KeyEvent e) {
                 int key = e.getKeyCode();
-                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT 
+                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT
                         || key == KeyEvent.VK_A || key == KeyEvent.VK_D) {
                     paddle.setDx(0);
                 }
@@ -88,7 +88,7 @@ public class Game extends JPanel implements ActionListener {
                 ball.bounceOff(b);
 
                 // 20% tỉ lệ rơi power-up
-                if (Math.random() < 0.2) {
+                if (Math.random() < 0.9) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
@@ -113,9 +113,9 @@ public class Game extends JPanel implements ActionListener {
                         case 5:
                             powerUp = new SlowBallPowerUp(brickX, brickY);
                             break;
-                        //case 6:
-                        //    powerUp = new MultiBallPowerUp(brickX, brickY);
-                        //    break;
+//                        case 6:
+//                            powerUp = new MultiBallPowerUp(brickX, brickY);
+//                            break;
                         default:
                             powerUp = null; // dự phòng
                             break;

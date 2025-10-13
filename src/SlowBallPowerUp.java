@@ -1,4 +1,6 @@
 public class SlowBallPowerUp extends PowerUp {
+    private static final double speedDivider = 0.5;
+
     public SlowBallPowerUp(double x, double y) {
         super(x, y, 20, 20, "slowball", 5);
     }
@@ -6,20 +8,20 @@ public class SlowBallPowerUp extends PowerUp {
     @Override
     public void applyEffect(Paddle paddle, Ball ball) {
         if (ball != null) {
-            ball.setSpeed(ball.getSpeed() * 0.7);
+            ball.setSpeed(ball.getSpeed() * speedDivider);
         }
     }
 
     @Override
     public void removeEffect(Paddle paddle, Ball ball) {
         if (ball != null) {
-            ball.setSpeed(ball.getSpeed() / 0.7);
+            ball.setSpeed(ball.getSpeed() / speedDivider);
         }
     }
 
     @Override
     public void render(Renderer rd) {
         rd.setColor(0, 150, 255);
-        rd.fillRect(getX(), getY(), getWidth(), getHeight());
+        rd.fillCircle(getX(), getY(), getWidth() / 2);
     }
 }
