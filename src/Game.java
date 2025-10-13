@@ -44,6 +44,7 @@ public class Game extends JPanel implements ActionListener {
         });
     }
 
+    // Original map
     private void initGameObjects() {
         paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
         ball = new Ball(paddle.getX() + paddle.getWidth() / 2 - 10, paddle.getY() - 20, 10, 200, 1, -1);
