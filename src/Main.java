@@ -1,6 +1,6 @@
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,7 +28,8 @@ public class Main {
                         frame.revalidate();
                         game.requestFocusInWindow();
                     } else if ("options".equals(cmd)) {
-                        JOptionPane.showMessageDialog(frame, "No options yet", "Options", JOptionPane.INFORMATION_MESSAGE);
+                        OptionsMenu optionsMenu = new OptionsMenu(frame);
+                        optionsMenu.setVisible(true);
                     } else if ("exit".equals(cmd)) {
                         System.exit(0);
                     }
