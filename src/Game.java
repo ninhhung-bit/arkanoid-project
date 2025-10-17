@@ -1,8 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 
 public class Game extends JPanel implements ActionListener {
     private Timer timer;
@@ -27,7 +27,7 @@ public class Game extends JPanel implements ActionListener {
 
         initGameObjects();
 
-        timer = new Timer(16, this); // ~60 FPS
+        timer = new Timer(16, this); 
         timer.start();
 
         addKeyListener(new KeyAdapter() {
@@ -51,7 +51,16 @@ public class Game extends JPanel implements ActionListener {
     // Original map
     private void initGameObjects() {
         paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
-        ball = new Ball(paddle.getX() + paddle.getWidth() / 2 - 10, paddle.getY() - 20, 10, 200, 1, -1);
+
+        double baseSpeed = 150 + GameSettings.getSpeed() * 35; 
+        ball = new Ball(
+            paddle.getX() + paddle.getWidth() / 2 - 10,
+            paddle.getY() - 20,
+            10,
+            baseSpeed,
+            1,
+            -1
+        );
 
         bricks.clear();
         powerUps.clear();
@@ -87,8 +96,8 @@ public class Game extends JPanel implements ActionListener {
                 b.setDestroyed(true);
                 ball.bounceOff(b);
 
-                // 20% tỉ lệ rơi power-up
-                if (Math.random() < 0.9) {
+                // 30% tỉ lệ rơi power-up
+                if (Math.random() < 0.3) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;

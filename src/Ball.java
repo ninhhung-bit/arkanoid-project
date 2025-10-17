@@ -95,7 +95,6 @@ public class Ball extends MovableObject {
         setY(newY);
         directionX = Math.random() > 0.5 ? 1 : -1;
         directionY = -1;
-        speed = 300; // reset về tốc độ gốc
     }
 
     public void bounceOff(GameObject other) {
@@ -103,6 +102,13 @@ public class Ball extends MovableObject {
 
         double hitPoint = (getX() + getWidth() / 2) - (other.getX() + other.getWidth() / 2);
         directionX = hitPoint / (other.getWidth() / 2);
+
+        //chuẩn hoá hướng cho vector
+        double length = Math.sqrt(directionX * directionX + directionY * directionY);
+        if (length != 0) {
+            directionX /= length;
+            directionY /= length;
+        }
     }
 
     public boolean checkCollision(GameObject other) {

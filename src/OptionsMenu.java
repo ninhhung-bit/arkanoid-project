@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
 
 
 public class OptionsMenu extends JDialog {
@@ -60,6 +60,11 @@ public class OptionsMenu extends JDialog {
 
                 int vol = volumeSlider.getValue();
                 int spd = speedSlider.getValue();
+                
+                // lưu vào game setting
+                GameSettings.setVolume(vol);
+                GameSettings.setSpeed(spd);
+
                 JOptionPane.showMessageDialog(parent,
                         "Saved!\nVolume: " + vol + "\nSpeed: " + spd,
                         "Settings Saved",
