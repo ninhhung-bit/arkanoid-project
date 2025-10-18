@@ -41,10 +41,9 @@ public class Brick extends GameObject {
     @Override
     public void render(Renderer rd) {
         if (!destroyed) {
-            rd.setColor(java.awt.Color.ORANGE);
-            rd.fillRect(getX(), getY(), getWidth(), getHeight());
-            rd.setColor(java.awt.Color.BLACK);
-            rd.drawRect(getX(), getY(), getWidth(), getHeight());
+            String img = "NormalBrick.png";
+            if ("strong".equalsIgnoreCase(type)) img = "StrongBrick.png";
+            rd.drawImage(img, getX(), getY(), getWidth(), getHeight());
         }
     }
 }

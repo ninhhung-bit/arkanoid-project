@@ -1,7 +1,20 @@
 import java.awt.*;
+<<<<<<< HEAD
 
 public class Renderer {
     private Graphics2D g;
+=======
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import javax.imageio.ImageIO;
+
+public class Renderer {
+    private Graphics2D g;
+    private static HashMap<String, BufferedImage> imageCache = new HashMap<>();
+    private static final String IMAGE_DIR = "src/images/";
+>>>>>>> cc4cdf6 (Initial project files: add source and README)
 
     public Renderer(Graphics g) {
         this.g = (Graphics2D) g;
@@ -41,24 +54,75 @@ public class Renderer {
         g.drawString(text, (int) x, (int) y);
     }
 
+<<<<<<< HEAD
+=======
+    // ----- Draw image helper -----
+    public void drawImage(String imageName, double x, double y, double w, double h) {
+        if (imageName == null) return;
+        try {
+            BufferedImage img = imageCache.get(imageName);
+            if (img == null) {
+                File f = new File(IMAGE_DIR + imageName);
+                System.out.println("Loading image: " + f.getAbsolutePath() + " exists: " + f.exists());
+                if (f.exists()) {
+                    img = ImageIO.read(f);
+                    imageCache.put(imageName, img);
+                    System.out.println("Image loaded successfully: " + imageName);
+                }
+            }
+            if (img != null) {
+                g.drawImage(img, (int) x, (int) y, (int) w, (int) h, null);
+                System.out.println("Drawing image: " + imageName + " at " + x + "," + y);
+            } else {
+                // fallback box
+                setColor(Color.MAGENTA);
+                fillRect(x, y, w, h);
+                System.out.println("Fallback: drawing magenta box for " + imageName);
+            }
+        } catch (IOException ex) {
+            // fallback box on error
+            System.out.println("Error loading image " + imageName + ": " + ex.getMessage());
+            setColor(Color.MAGENTA);
+            fillRect(x, y, w, h);
+        }
+    }
+
+>>>>>>> cc4cdf6 (Initial project files: add source and README)
     // ----- Phương thức tự động vẽ một GameObject -----
     public void draw(GameObject obj) {
         if (obj == null) return;
 
         // Ví dụ: vẽ theo loại đối tượng
         if (obj instanceof Paddle) {
+<<<<<<< HEAD
             setColor(Color.CYAN);
             fillRect(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
         }
         else if (obj instanceof Ball) {
             setColor(Color.WHITE);
             fillCircle(obj.getX(), obj.getY(), obj.getWidth() / 2);
+=======
+            // try image first
+            drawImage("Paddle.png", obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+        }
+        else if (obj instanceof Ball) {
+            drawImage("Ball.png", obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+>>>>>>> cc4cdf6 (Initial project files: add source and README)
         }
         else if (obj instanceof Brick) {
             Brick b = (Brick) obj;
             if (!b.isDestroyed()) {
+<<<<<<< HEAD
                 setColor(Color.ORANGE);
                 fillRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+=======
+                // choose brick image according to type if available
+                String img = null;
+                if ("strong".equalsIgnoreCase(b.getType())) img = "StrongBrick.png";
+                else img = "NormalBrick.png";
+                drawImage(img, b.getX(), b.getY(), b.getWidth(), b.getHeight());
+                // draw border
+>>>>>>> cc4cdf6 (Initial project files: add source and README)
                 setColor(Color.BLACK);
                 drawRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             }

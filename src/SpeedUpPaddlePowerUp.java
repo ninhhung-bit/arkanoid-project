@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 public class SpeedUpPaddlePowerUp extends PowerUp {
 
     private double speedMultiplier = 1.3;
@@ -26,3 +27,32 @@ public class SpeedUpPaddlePowerUp extends PowerUp {
         rd.fillRect(getX(), getY(), getWidth(), getHeight());
     }
 }
+=======
+public class SpeedUpPaddlePowerUp extends PowerUp {
+
+    private double speedMultiplier = 1.3;
+
+    public SpeedUpPaddlePowerUp(double x, double y) {
+        super(x, y, 30, 30, "speedup", 20.0);
+    }
+
+    @Override
+    public void applyEffect(Paddle paddle, Ball ball) {
+        if (paddle != null) {
+            paddle.applyPowerUp("speedup");
+        }
+    }
+
+    @Override
+    public void removeEffect(Paddle paddle, Ball ball) {
+        if (paddle != null) {
+            paddle.resetPaddle();
+        }
+    }
+
+    @Override
+    public void render(Renderer rd) {
+        rd.drawImage("SpeedUpPaddlePowerUp.png", getX(), getY(), getWidth(), getHeight());
+    }
+}
+>>>>>>> cc4cdf6 (Initial project files: add source and README)

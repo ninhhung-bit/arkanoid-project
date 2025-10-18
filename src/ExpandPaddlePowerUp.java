@@ -1,13 +1,13 @@
 public class ExpandPaddlePowerUp extends PowerUp {
 
     public ExpandPaddlePowerUp(double x, double y) {
-        super(x, y, 20, 20, "expand", 5.0);
+        super(x, y, 30, 30, "expand", 20.0);
     }
 
     @Override
     public void applyEffect(Paddle paddle, Ball ball) {
         if (paddle != null) {
-            paddle.setWidth(Math.min(paddle.getWidth() * 1.5, paddle.maxWidth));
+            paddle.applyPowerUp("expand");
         }
     }
 
@@ -20,7 +20,6 @@ public class ExpandPaddlePowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.setColor(0, 255, 0); // Xanh lá
-        rd.fillRect(getX(), getY(), getWidth(), getHeight());
+        rd.drawImage("ExpandPaddlePowerUp.png", getX(), getY(), getWidth(), getHeight());
     }
 }
