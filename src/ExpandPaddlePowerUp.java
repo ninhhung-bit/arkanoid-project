@@ -20,7 +20,10 @@ public class ExpandPaddlePowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
+<<<<<<< HEAD
         // Renderer will draw image if available
+=======
+>>>>>>> backup-changes
         rd.drawImage("ExpandPaddlePowerUp.png", getX(), getY(), getWidth(), getHeight());
     }
 }

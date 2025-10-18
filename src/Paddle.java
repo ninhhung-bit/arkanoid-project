@@ -4,7 +4,11 @@ public class Paddle extends MovableObject {
     public static final double screenHeight = 600;
 
     protected double minWidth;
+<<<<<<< HEAD
     protected double maxWidth;;
+=======
+    protected double maxWidth;
+>>>>>>> backup-changes
     protected double baseWidth;
 
     protected double height;
@@ -15,7 +19,11 @@ public class Paddle extends MovableObject {
     protected double activePowerUpRemaining = 0.0; // seconds
     protected int level;
 
+<<<<<<< HEAD
     public Paddle(double x, double y,double speed) {
+=======
+    public Paddle(double x, double y, double speed) {
+>>>>>>> backup-changes
         super(x, y, 0, 0);
 
         this.minWidth = screenWidth * 0.15;
@@ -31,6 +39,7 @@ public class Paddle extends MovableObject {
         this.level = 1;
     }
 
+<<<<<<< HEAD
     public double getSpeed() {
         return speed;
     }
@@ -78,6 +87,33 @@ public class Paddle extends MovableObject {
             clearActivePowerUp();
         }
 
+=======
+    public double getSpeed() { return speed; }
+    public void setSpeed(double speed) { this.speed = speed; }
+
+    public String getCurrentPowerUp() { return currentPowerUp; }
+    public void setCurrentPowerUp(String powerUp) { this.currentPowerUp = powerUp; }
+
+    public int getLevel() { return level; }
+
+    @Override
+    public void move(double dt) { setX(getX() + getDx() * dt); }
+
+    public void moveLeft(double dt) { setX(getX() - speed * dt); }
+    public void moveRight(double dt) { setX(getX() + speed * dt); }
+
+    public void applyPowerUp(String powerUpType) {
+        if (powerUpType == null) return;
+        powerUpType = powerUpType.toLowerCase();
+        // refresh if same
+        if (powerUpType.equals(activePowerUpType)) {
+            activePowerUpRemaining = 20.0;
+            return;
+        }
+        if (activePowerUpType != null) {
+            clearActivePowerUp();
+        }
+>>>>>>> backup-changes
         activePowerUpType = powerUpType;
         activePowerUpRemaining = 20.0;
 
@@ -129,24 +165,36 @@ public class Paddle extends MovableObject {
 
     @Override
     public void update(double dt) {
+<<<<<<< HEAD
         // update active power-up timer
+=======
+>>>>>>> backup-changes
         if (activePowerUpType != null) {
             activePowerUpRemaining -= dt;
             if (activePowerUpRemaining <= 0) {
                 clearActivePowerUp();
             }
         }
+<<<<<<< HEAD
         if (getX() < 0) {
             setX(0);
         }
         if (getX() + getWidth() > screenWidth) {
             setX(screenWidth - getWidth());
         }
+=======
+        if (getX() < 0) { setX(0); }
+        if (getX() + getWidth() > screenWidth) { setX(screenWidth - getWidth()); }
+>>>>>>> backup-changes
     }
 
     @Override
     public void render(Renderer rd) {
+<<<<<<< HEAD
         // try to render image, fallback to rectangle
+=======
+        // try to render image; renderer should handle missing images or fallback
+>>>>>>> backup-changes
         rd.drawImage("Paddle.png", getX(), getY(), getWidth(), getHeight());
     }
 }

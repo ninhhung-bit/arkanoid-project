@@ -80,7 +80,11 @@ public class Ball extends MovableObject {
 
     @Override
     public void render(Renderer rd) {
+<<<<<<< HEAD
         rd.drawImage("Ball.png", getX(), getY(), getWidth(), getHeight());
+=======
+    rd.drawImage("Ball.png", getX(), getY(), getWidth(), getHeight());
+>>>>>>> backup-changes
     }
 
     public void resetPosition(Paddle paddle) {
