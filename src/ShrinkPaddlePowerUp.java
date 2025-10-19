@@ -1,35 +1,5 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 public class ShrinkPaddlePowerUp extends PowerUp {
-
-    public ShrinkPaddlePowerUp(double x, double y) {
-        super(x, y, 20, 20, "shrink", 5.0);
-    }
-
-    @Override
-    public void applyEffect(Paddle paddle, Ball ball) {
-        if (paddle != null) {
-            paddle.setWidth(Math.max(paddle.getWidth() * 0.75, paddle.minWidth));
-        }
-    }
-
-    @Override
-    public void removeEffect(Paddle paddle, Ball ball) {
-        if (paddle != null) {
-            paddle.resetPaddle();
-        }
-    }
-
-    @Override
-    public void render(Renderer rd) {
-        rd.setColor(255, 0, 255); // Hồng tím
-        rd.fillRect(getX(), getY(), getWidth(), getHeight());
-    }
-}
-=======
->>>>>>> backup-changes
-public class ShrinkPaddlePowerUp extends PowerUp {
+    private static final double SHRINK_FACTOR = 0.75;
 
     public ShrinkPaddlePowerUp(double x, double y) {
         super(x, y, 30, 30, "shrink", 20.0);
@@ -37,16 +7,12 @@ public class ShrinkPaddlePowerUp extends PowerUp {
 
     @Override
     public void applyEffect(Paddle paddle, Ball ball) {
-        if (paddle != null) {
-            paddle.applyPowerUp("shrink");
-        }
+        if (paddle != null) paddle.setWidth(paddle.getWidth() * SHRINK_FACTOR);
     }
 
     @Override
     public void removeEffect(Paddle paddle, Ball ball) {
-        if (paddle != null) {
-            paddle.resetPaddle();
-        }
+        if (paddle != null) paddle.setWidth(paddle.getWidth() / SHRINK_FACTOR);
     }
 
     @Override
@@ -54,7 +20,3 @@ public class ShrinkPaddlePowerUp extends PowerUp {
         rd.drawImage("ShrinkPaddlePowerUp.png", getX(), getY(), getWidth(), getHeight());
     }
 }
-<<<<<<< HEAD
-=======
->>>>>>> cc4cdf6 (Initial project files: add source and README)
->>>>>>> backup-changes
