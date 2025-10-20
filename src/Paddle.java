@@ -7,23 +7,17 @@ public class Paddle extends MovableObject {
     protected double maxWidth;
     protected double baseWidth;
 
-    protected double height;
-
     protected String currentPowerUp;
     protected String activePowerUpType = null;
     protected double activePowerUpRemaining = 0.0; // seconds
     protected int level;
 
     public Paddle(double x, double y, double speed) {
-        super(x, y, 0, 0);
+        super(x, y, 160, 24);
 
-        this.minWidth = screenWidth * 0.15;
-        this.maxWidth = screenWidth * 0.25;
-        this.baseWidth = screenWidth * 0.20;
-        this.height = screenHeight * 0.04;
-
-        this.width = baseWidth;
-        this.height = height;
+        this.minWidth = 120;
+        this.maxWidth = 200;
+        this.baseWidth = 160;
 
         this.speed = speed;
         this.currentPowerUp = null;
