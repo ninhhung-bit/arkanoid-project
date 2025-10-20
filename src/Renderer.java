@@ -25,26 +25,29 @@ public class Renderer {
     public void fillCircle(double x, double y, double r) { g.fillOval((int)x, (int)y, (int)(r*2), (int)(r*2)); }
     public void drawText(String text, double x, double y) { g.drawString(text, (int)x, (int)y); }
 
-    public void drawImage(String imageName, double x, double y, double w, double h) {
-        if (imageName == null) return;
+    private BufferedImage loadImage(String imageName) {
+        BufferedImage img = imageCache.get(imageName);
+        if (img != null) return img;
+
         try {
-            BufferedImage img = imageCache.get(imageName);
-            if (img == null) {
-                File f = new File(IMAGE_DIR + imageName);
-                if (f.exists()) {
-                    img = ImageIO.read(f);
-                    imageCache.put(imageName, img);
-                }
-            }
-            if (img != null) {
-                g.drawImage(img, (int)x, (int)y, (int)w, (int)h, null);
+            java.io.InputStream stream = getClass().getResourceAsStream("/images/" + imageName);
+            if (stream != null) {
+                img = ImageIO.read(stream);
+                imageCache.put(imageName, img);
             } else {
-                Color old = g.getColor();
-                g.setColor(Color.MAGENTA);
-                fillRect(x, y, w, h);
-                g.setColor(old);
+                System.out.println("⚠ Không tìm thấy ảnh: /images/" + imageName);
             }
         } catch (IOException e) {
+            System.out.println("⚠ Lỗi đọc ảnh: " + imageName + " -> " + e.getMessage());
+        }
+        return img;
+    }
+
+    public void drawImage(String imageName, double x, double y, double w, double h) {
+        BufferedImage img = loadImage(imageName);
+        if (img != null) {
+            g.drawImage(img, (int)x, (int)y, (int)w, (int)h, null);
+        } else {
             Color old = g.getColor();
             g.setColor(Color.MAGENTA);
             fillRect(x, y, w, h);
