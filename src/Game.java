@@ -164,13 +164,13 @@ public class Game extends JPanel implements ActionListener {
         super.paintComponent(g);
         Renderer rd = new Renderer(g);
 
-        rd.setColor(Color.CYAN);
-        paddle.render(rd);
+        rd.drawImage("Background.png", 0, 0, getWidth(), getHeight());
 
-        rd.setColor(Color.WHITE);
+        paddle.render(rd);
         ball.render(rd);
 
         for (Brick b : bricks) b.render(rd);
         for (PowerUp p : powerUps) p.render(rd);
     }
+
 }
