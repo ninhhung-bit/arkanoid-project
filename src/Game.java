@@ -12,6 +12,9 @@ public class Game extends JPanel implements ActionListener {
     private List<Brick> bricks = new ArrayList<>();
     private List<PowerUp> powerUps = new ArrayList<>();
     private List<PowerUp> activeBallPowerUps = new ArrayList<>();
+    private int currentLevel = 1;
+    private int totalBricks = 20;
+    private boolean levelCompleted = false;
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -22,6 +25,40 @@ public class Game extends JPanel implements ActionListener {
 
     public Game(Runnable onGameOver) {
         this.onGameOver = onGameOver;
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setBackground(Color.DARK_GRAY);
+        setFocusable(true);
+
+        initGameObjects();
+
+        timer = new Timer(16, this);
+        timer.start();
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A)
+                    paddle.setDx(-paddle.getSpeed());
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D)
+                    paddle.setDx(paddle.getSpeed());
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT
+                        || key == KeyEvent.VK_A || key == KeyEvent.VK_D) {
+                    paddle.setDx(0);
+                }
+            }
+        });
+    }
+
+    public Game(int level, Runnable onGameOver) {
+        this.onGameOver = onGameOver;
+        this.currentLevel = level;
+        this.totalBricks = 20 + (level - 1) * 10;
+
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.DARK_GRAY);
         setFocusable(true);
@@ -67,16 +104,19 @@ public class Game extends JPanel implements ActionListener {
         bricks.clear();
         powerUps.clear();
 
-        int rows = 4;
         int cols = 5;
+        int rows = (int) Math.ceil(totalBricks / (double) cols);
         double brickW = WIDTH / (double) cols;
         double brickH = 20;
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
+                if (bricks.size() >= totalBricks) break;
                 bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, 1, "normal"));
             }
         }
+
+        levelCompleted = false;
     }
 
     @Override
@@ -155,6 +195,44 @@ public class Game extends JPanel implements ActionListener {
                 SwingUtilities.invokeLater(onGameOver);
             }
         }
+        // Kiểm tra xem còn viên gạch nào không
+        boolean allDestroyed = true;
+        for (Brick b : bricks) {
+            if (!b.isDestroyed()) {
+                allDestroyed = false;
+                break;
+            }
+        }
+
+        if (allDestroyed && !levelCompleted) {
+            levelCompleted = true;
+            timer.stop();
+
+            // Nếu còn level tiếp theo → chuyển level mới
+            if (currentLevel < 3) {
+                int nextLevel = currentLevel + 1;
+                int choice = JOptionPane.showConfirmDialog(this,
+                        "Bạn đã hoàn thành Level " + currentLevel + "!\nChuyển sang Level " + nextLevel + "?",
+                        "Hoàn thành Level",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    currentLevel = nextLevel;
+                    totalBricks = 20 + (currentLevel - 1) * 10;
+                    initGameObjects();
+                    timer.start();
+                } else if (onGameOver != null) {
+                    SwingUtilities.invokeLater(onGameOver);
+                }
+            } else {
+                // Hoàn tất hết tất cả level
+                JOptionPane.showMessageDialog(this,
+                        "Chúc mừng! Bạn đã hoàn thành tất cả 3 level!",
+                        "Chiến thắng",
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (onGameOver != null) SwingUtilities.invokeLater(onGameOver);
+            }
+        }
 
         repaint();
     }
@@ -171,6 +249,9 @@ public class Game extends JPanel implements ActionListener {
 
         for (Brick b : bricks) b.render(rd);
         for (PowerUp p : powerUps) p.render(rd);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Level " + currentLevel, 20, 30);
     }
 
 }
