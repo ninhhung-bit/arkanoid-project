@@ -15,6 +15,8 @@ public class Game extends JPanel implements ActionListener {
     private int currentLevel = 1;
     private int totalBricks = 20;
     private boolean levelCompleted = false;
+    private boolean paused = false;             // ⏸️ Trạng thái tạm dừng
+    private boolean showingPauseMenu = false;   // ✅ Đang hiển thị menu tạm dừng
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -37,10 +39,32 @@ public class Game extends JPanel implements ActionListener {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A)
+                int key = e.getKeyCode();
+
+                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A)
                     paddle.setDx(-paddle.getSpeed());
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D)
+                if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D)
                     paddle.setDx(paddle.getSpeed());
+
+                // 🟡 ESC bật/tắt tạm dừng
+                if (key == KeyEvent.VK_ESCAPE)
+                    handleEscKey();
+
+                // 🧩 Xử lý phím khi đang tạm dừng
+                if (paused && showingPauseMenu) {
+                    if (key == KeyEvent.VK_R) { // Restart
+                        paused = false;
+                        showingPauseMenu = false;
+                        initGameObjects();
+                        timer.start();
+                        repaint();
+                    } else if (key == KeyEvent.VK_M) { // Main Menu
+                        paused = false;
+                        showingPauseMenu = false;
+                        if (onGameOver != null)
+                            SwingUtilities.invokeLater(onGameOver);
+                    }
+                }
             }
 
             @Override
@@ -71,10 +95,32 @@ public class Game extends JPanel implements ActionListener {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A)
+                int key = e.getKeyCode();
+
+                if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A)
                     paddle.setDx(-paddle.getSpeed());
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D)
+                if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D)
                     paddle.setDx(paddle.getSpeed());
+
+                // 🟡 ESC bật/tắt tạm dừng
+                if (key == KeyEvent.VK_ESCAPE)
+                    handleEscKey();
+
+                // 🧩 Xử lý phím khi đang tạm dừng
+                if (paused && showingPauseMenu) {
+                    if (key == KeyEvent.VK_R) { // Restart
+                        paused = false;
+                        showingPauseMenu = false;
+                        initGameObjects();
+                        timer.start();
+                        repaint();
+                    } else if (key == KeyEvent.VK_M) { // Main Menu
+                        paused = false;
+                        showingPauseMenu = false;
+                        if (onGameOver != null)
+                            SwingUtilities.invokeLater(onGameOver);
+                    }
+                }
             }
 
             @Override
@@ -86,6 +132,23 @@ public class Game extends JPanel implements ActionListener {
                 }
             }
         });
+    }
+
+    // 🧩 Xử lý phím ESC bật/tắt menu tạm dừng
+    private void handleEscKey() {
+        if (!paused) {
+            // ESC lần đầu → bật menu tạm dừng
+            paused = true;
+            showingPauseMenu = true;
+            timer.stop();
+            repaint();
+        } else {
+            // ESC lần 2 → tiếp tục game
+            paused = false;
+            showingPauseMenu = false;
+            timer.start();
+            repaint();
+        }
     }
 
     private void initGameObjects() {
@@ -121,6 +184,8 @@ public class Game extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (paused) return; // ⛔ Không cập nhật khi game đang tạm dừng
+
         double dt = 0.016; // fixed timestep
 
         paddle.move(dt);
@@ -195,6 +260,7 @@ public class Game extends JPanel implements ActionListener {
                 SwingUtilities.invokeLater(onGameOver);
             }
         }
+
         // Kiểm tra xem còn viên gạch nào không
         boolean allDestroyed = true;
         for (Brick b : bricks) {
@@ -249,9 +315,39 @@ public class Game extends JPanel implements ActionListener {
 
         for (Brick b : bricks) b.render(rd);
         for (PowerUp p : powerUps) p.render(rd);
+
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Level " + currentLevel, 20, 30);
-    }
 
+        // 🕹️ Hiển thị menu tạm dừng overlay
+        if (paused && showingPauseMenu) {
+            Graphics2D g2 = (Graphics2D) g.create();
+
+            // Làm tối nền
+            g2.setColor(new Color(0, 0, 0, 180));
+            g2.fillRect(0, 0, WIDTH, HEIGHT);
+
+            // Tiêu đề
+            g2.setFont(new Font("Arial", Font.BOLD, 42));
+            g2.setColor(Color.YELLOW);
+            String title = "TẠM DỪNG";
+            int titleWidth = g2.getFontMetrics().stringWidth(title);
+            g2.drawString(title, (WIDTH - titleWidth) / 2, HEIGHT / 2 - 100);
+
+            // Các lựa chọn menu
+            g2.setFont(new Font("Arial", Font.BOLD, 28));
+            g2.setColor(Color.WHITE);
+            String[] options = {"Tiếp tục (ESC)", "Chơi lại (R)", "Về menu chính (M)"};
+
+            int baseY = HEIGHT / 2 - 20;
+            for (int i = 0; i < options.length; i++) {
+                String text = options[i];
+                int textWidth = g2.getFontMetrics().stringWidth(text);
+                g2.drawString(text, (WIDTH - textWidth) / 2, baseY + i * 50);
+            }
+
+            g2.dispose();
+        }
+    }
 }
