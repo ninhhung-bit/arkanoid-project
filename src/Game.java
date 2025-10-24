@@ -15,8 +15,8 @@ public class Game extends JPanel implements ActionListener {
     private int currentLevel = 1;
     private int totalBricks = 20;
     private boolean levelCompleted = false;
-    private boolean paused = false;             // ⏸️ Trạng thái tạm dừng
-    private boolean showingPauseMenu = false;   // ✅ Đang hiển thị menu tạm dừng
+    private boolean paused = false;             // Trạng thái tạm dừng
+    private boolean showingPauseMenu = false;   // Đang hiển thị menu tạm dừng
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -46,11 +46,11 @@ public class Game extends JPanel implements ActionListener {
                 if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D)
                     paddle.setDx(paddle.getSpeed());
 
-                // 🟡 ESC bật/tắt tạm dừng
+                // ESC bật/tắt tạm dừng
                 if (key == KeyEvent.VK_ESCAPE)
                     handleEscKey();
 
-                // 🧩 Xử lý phím khi đang tạm dừng
+                // Xử lý phím khi đang tạm dừng
                 if (paused && showingPauseMenu) {
                     if (key == KeyEvent.VK_R) { // Restart
                         paused = false;
@@ -102,11 +102,11 @@ public class Game extends JPanel implements ActionListener {
                 if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D)
                     paddle.setDx(paddle.getSpeed());
 
-                // 🟡 ESC bật/tắt tạm dừng
+                // ESC bật/tắt tạm dừng
                 if (key == KeyEvent.VK_ESCAPE)
                     handleEscKey();
 
-                // 🧩 Xử lý phím khi đang tạm dừng
+                // Xử lý phím khi đang tạm dừng
                 if (paused && showingPauseMenu) {
                     if (key == KeyEvent.VK_R) { // Restart
                         paused = false;
@@ -134,7 +134,7 @@ public class Game extends JPanel implements ActionListener {
         });
     }
 
-    // 🧩 Xử lý phím ESC bật/tắt menu tạm dừng
+    // Xử lý phím ESC bật/tắt menu tạm dừng
     private void handleEscKey() {
         if (!paused) {
             // ESC lần đầu → bật menu tạm dừng
@@ -184,7 +184,7 @@ public class Game extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (paused) return; // ⛔ Không cập nhật khi game đang tạm dừng
+        if (paused) return; // Không cập nhật khi game đang tạm dừng
 
         double dt = 0.016; // fixed timestep
 
