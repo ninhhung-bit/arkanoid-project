@@ -12,6 +12,9 @@ public class Paddle extends MovableObject {
     protected double activePowerUpRemaining = 0.0; // seconds
     protected int level;
 
+    private boolean reversedControl = false;
+    private double reverseRemaining = 0.0;
+
     public Paddle(double x, double y, double speed) {
         super(x, y, 160, 24);
 
@@ -35,8 +38,19 @@ public class Paddle extends MovableObject {
     @Override
     public void move(double dt) { setX(getX() + getDx() * dt); }
 
-    public void moveLeft(double dt) { setX(getX() - speed * dt); }
-    public void moveRight(double dt) { setX(getX() + speed * dt); }
+    public void moveLeft(double dt) {
+        if (!reversedControl)
+            setX(getX() - speed * dt);
+        else
+            setX(getX() + speed * dt);
+    }
+
+    public void moveRight(double dt) {
+        if (!reversedControl)
+            setX(getX() + speed * dt);
+        else
+            setX(getX() - speed * dt);
+    }
 
     public void applyPowerUp(String powerUpType) {
         if (powerUpType == null) return;
@@ -69,6 +83,10 @@ public class Paddle extends MovableObject {
             case "slow":
                 speed *= 0.7;
                 break;
+            case "reverse":
+                reversedControl = true;
+                reverseRemaining = 5.0;
+                break;    
             default:
                 break;
         }
@@ -85,6 +103,10 @@ public class Paddle extends MovableObject {
             case "slow":
                 speed = 500; // reset to default base
                 break;
+            case "reverse":
+                reversedControl = false;
+                reverseRemaining = 0.0;
+                break;
             default:
                 break;
         }
@@ -100,6 +122,8 @@ public class Paddle extends MovableObject {
         currentPowerUp = null;
         activePowerUpType = null;
         activePowerUpRemaining = 0.0;
+        reversedControl = false;
+        reverseRemaining = 0.0;
     }
 
     @Override
@@ -110,6 +134,15 @@ public class Paddle extends MovableObject {
                 clearActivePowerUp();
             }
         }
+
+        if (reversedControl) {
+            reverseRemaining -= dt;
+            if (reverseRemaining <= 0) {
+                reversedControl = false;
+                activePowerUpType = null;
+            }
+        }
+        
         if (getX() < 0) setX(0);
         if (getX() + getWidth() > screenWidth) setX(screenWidth - getWidth());
     }
