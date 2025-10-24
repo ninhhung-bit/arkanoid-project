@@ -77,4 +77,9 @@ public class Renderer {
             fillRect(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
         }
     }
+
+    public Graphics2D getGraphics2D() {
+        return g;
+    }
+
 }

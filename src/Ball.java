@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Ball extends MovableObject {
     protected double speed;
     protected double directionX;
@@ -5,6 +7,9 @@ public class Ball extends MovableObject {
 
     public static final double screenWidth = 800;
     public static final double screenHeight = 600;
+
+    private boolean piercing = false;
+    private double piercingDuration = 0.0;
 
     public Ball(double x, double y, double radius, double speed, double directionX, double directionY) {
         super(x, y, radius * 2, radius * 2, directionX, directionY);
@@ -48,6 +53,24 @@ public class Ball extends MovableObject {
         }
     }
 
+    public void activatePiercing(double duration) {
+        this.piercing = true;
+        this.piercingDuration = duration;
+    }
+
+    public void deactivatePiercing() {
+        this.piercing = false;
+        this.piercingDuration = 0.0;
+    }
+
+    public void setPiercing(boolean value) {
+        this.piercing = value;
+    }
+
+    public boolean isPiercing() {
+        return piercing;
+    }
+
     public boolean isOutOfScreen() {
         return getY() > screenHeight;
     }
@@ -61,6 +84,13 @@ public class Ball extends MovableObject {
     @Override
     public void update(double dt) {
         move(dt);
+
+        if (piercing) {
+            piercingDuration -= dt;
+            if (piercingDuration <= 0) {
+                deactivatePiercing();
+            }
+        }
 
         // Va chạm tường trái/phải
         if (getX() <= 0) {
@@ -80,7 +110,20 @@ public class Ball extends MovableObject {
 
     @Override
     public void render(Renderer rd) {
-        rd.drawImage("Ball.png", getX(), getY(), getWidth(), getHeight());
+        if (piercing) {
+            Graphics2D g2d = rd.getGraphics2D();
+
+            // Vẽ bóng gốc (dùng hình PNG bình thường)
+            rd.drawImage("Ball.png", getX(), getY(), getWidth(), getHeight());
+
+            // Vẽ viền đỏ mảnh quanh bóng
+            g2d.setColor(Color.RED);
+            g2d.setStroke(new BasicStroke(3));
+            g2d.drawOval((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
+        } else {
+            // Bình thường
+            rd.drawImage("Ball.png", getX(), getY(), getWidth(), getHeight());
+        }
     }
 
     public void resetPosition(Paddle paddle) {
@@ -98,6 +141,8 @@ public class Ball extends MovableObject {
     }
 
     public void bounceOff(GameObject other) {
+        if (piercing && other instanceof Brick) return;
+
         directionY *= -1;
 
         double hitPoint = (getX() + getWidth() / 2) - (other.getX() + other.getWidth() / 2);

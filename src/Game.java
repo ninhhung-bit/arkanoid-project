@@ -201,7 +201,10 @@ public class Game extends JPanel implements ActionListener {
         for (Brick b : new ArrayList<>(bricks)) {
             if (!b.isDestroyed() && ball.checkCollision(b)) {
                 b.setDestroyed(true);
-                ball.bounceOff(b);
+
+                if (!ball.isPiercing()) {
+                    ball.bounceOff(b);
+                }
 
                 // 10% drop chance for power-up
                 if (Math.random() < 0.1) {
@@ -209,7 +212,7 @@ public class Game extends JPanel implements ActionListener {
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
 
-                    int rand = (int) (Math.random() * 7);
+                    int rand = (int) (Math.random() * 8);
                     switch (rand) {
                         case 0: powerUp = new ExpandPaddlePowerUp(brickX, brickY); break;
                         case 1: powerUp = new ShrinkPaddlePowerUp(brickX, brickY); break;
@@ -218,9 +221,9 @@ public class Game extends JPanel implements ActionListener {
                         case 4: powerUp = new FastBallPowerUp(brickX, brickY); break;
                         case 5: powerUp = new SlowBallPowerUp(brickX, brickY); break;
                         case 6: powerUp = new ReverseControlPowerUp(brickX, brickY); break;
+                        case 7: powerUp = new PiercingPowerUp(brickX, brickY); break;
                         default: break;
                     }
-
 
                     if (powerUp != null) powerUps.add(powerUp);
                 }
