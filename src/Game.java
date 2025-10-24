@@ -180,6 +180,10 @@ public class Game extends JPanel implements ActionListener {
         }
 
         levelCompleted = false;
+        /**
+         * am thanh.
+         */
+        SoundManager.playBackground("sounds/background.wav");
     }
 
     @Override
@@ -195,6 +199,11 @@ public class Game extends JPanel implements ActionListener {
         // Ball - Paddle collision
         if (ball.checkCollision(paddle)) {
             ball.bounceOff(paddle);
+
+            /**
+             * am thanh dap vao paddle.
+             */
+            SoundManager.playSound("sounds/hit.wav");
         }
 
         // Ball - Brick collisions
@@ -205,6 +214,11 @@ public class Game extends JPanel implements ActionListener {
                 if (!ball.isPiercing()) {
                     ball.bounceOff(b);
                 }
+
+                /**
+                 * amthanh dap vao gach.
+                 */
+                SoundManager.playSound("sounds/hit.wav");
 
                 // 10% drop chance for power-up
                 if (Math.random() < 0.1) {
@@ -248,6 +262,7 @@ public class Game extends JPanel implements ActionListener {
         // Check Game Over
         if (ball.isOutOfScreen()) {
             timer.stop();
+            SoundManager.stopBackground();
 
             int choice = JOptionPane.showOptionDialog(this,
                     "Bạn đã thua!",
@@ -325,7 +340,7 @@ public class Game extends JPanel implements ActionListener {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Level " + currentLevel, 20, 30);
 
-        // 🕹️ Hiển thị menu tạm dừng overlay
+        //  Hiển thị menu tạm dừng overlay
         if (paused && showingPauseMenu) {
             Graphics2D g2 = (Graphics2D) g.create();
 
