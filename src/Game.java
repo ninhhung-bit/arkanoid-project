@@ -181,7 +181,7 @@ public class Game extends JPanel implements ActionListener {
 
         levelCompleted = false;
         /**
-         * am thanh.
+         * am thanh nen.
          */
         SoundManager.playBackground("sounds/background.wav");
     }

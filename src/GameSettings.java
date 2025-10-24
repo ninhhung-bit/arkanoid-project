@@ -9,6 +9,7 @@ public class GameSettings {    // class này lưu trữ các giá trị khi mà 
 
     public static void setVolume(int v) {
         volume = v;
+        SoundManager.setVolume(v);
     }
 
     public static int getSpeed() {
