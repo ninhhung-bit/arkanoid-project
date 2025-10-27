@@ -215,6 +215,9 @@ public class Game extends JPanel implements ActionListener {
                     ball.bounceOff(b);
                 }
 
+                // Cập nhật điểm số khi phá gạch
+                ScoreBoard.addBrickPoints();
+
                 /**
                  * amthanh dap vao gach.
                  */
@@ -239,7 +242,11 @@ public class Game extends JPanel implements ActionListener {
                         default: break;
                     }
 
-                    if (powerUp != null) powerUps.add(powerUp);
+                    if (powerUp != null) {
+                    powerUps.add(powerUp);
+                    // Cập nhật điểm số khi tạo powerup
+                    ScoreBoard.addPowerUpPoints();
+                }
                 }
             }
         }
@@ -339,6 +346,7 @@ public class Game extends JPanel implements ActionListener {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Level " + currentLevel, 20, 30);
+        g.drawString("Score: " + ScoreBoard.getScore(), 20, 60);
 
         //  Hiển thị menu tạm dừng overlay
         if (paused && showingPauseMenu) {
