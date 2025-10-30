@@ -177,14 +177,45 @@ public class Game extends JPanel implements ActionListener {
         powerUps.clear();
 
         int cols = 5;
-        int rows = (int) Math.ceil(totalBricks / (double) cols);
+        int rows;
         double brickW = WIDTH / (double) cols;
         double brickH = 20;
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (bricks.size() >= totalBricks) break;
-                bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, 1, "normal"));
+// Thiết lập số hàng và loại gạch theo level
+        if (currentLevel == 1) {
+            rows = 4;
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < cols; c++) {
+                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, 1, "normal"));
+                }
+            }
+        }
+        else if (currentLevel == 2) {
+            rows = 6; // 3 hàng strong xen 3 hàng normal
+            for (int r = 0; r < rows; r++) {
+                String type = (r % 2 == 0) ? "strong" : "normal";
+                int hp = type.equals("strong") ? 2 : 1;
+                for (int c = 0; c < cols; c++) {
+                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, hp, type));
+                }
+            }
+        }
+        else if (currentLevel == 3) {
+            rows = 8; // 8 hàng
+            for (int r = 0; r < rows; r++) {
+                String type = (r % 2 == 0) ? "strong" : "normal";
+                int hp = type.equals("strong") ? 2 : 1;
+                for (int c = 0; c < cols; c++) {
+                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, hp, type));
+                }
+            }
+
+            // 4 viên UnbreakableBrick ở hàng cuối (row 7)
+            int lastRow = rows - 1; // row 7
+            for (int c = 0; c < Math.min(4, cols); c++) { // 4 viên
+                int idx = lastRow * cols + c;
+                Brick b = bricks.get(idx);
+                bricks.set(idx, new UnbreakableBrick(b.getX(), b.getY(), b.getWidth(), b.getHeight()));
             }
         }
 
@@ -273,14 +304,18 @@ public class Game extends JPanel implements ActionListener {
         // Ball - Brick collisions
         for (Brick b : new ArrayList<>(bricks)) {
             if (!b.isDestroyed() && ball.checkCollision(b)) {
-                b.setDestroyed(true);
+                // Gọi takeHit() để trừ máu nếu không phải unbreakable
+                if (!"unbreakable".equalsIgnoreCase(b.getType())) {
+                    b.takeHit();
+                    if (b.isDestroyed()) {
+                        ScoreBoard.addBrickPoints();
+                    }
+                }
 
+                // Bóng nảy lại (nếu không xuyên)
                 if (!ball.isPiercing()) {
                     ball.bounceOff(b);
                 }
-
-                // Cập nhật điểm số khi phá gạch
-                ScoreBoard.addBrickPoints();
 
                 /**
                  * amthanh dap vao gach.
