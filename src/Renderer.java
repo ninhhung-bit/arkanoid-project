@@ -65,7 +65,8 @@ public class Renderer {
             Brick b = (Brick) obj;
             if (!b.isDestroyed()) {
                 String img = "NormalBrick.png";
-                if ("strong".equalsIgnoreCase(b.getType())) img = "StrongBrick.png";
+                if ("strong".equalsIgnoreCase(b.getType())) { img = "StrongBrick.png"; }
+                else if ("unbreakable".equalsIgnoreCase(b.getType())) { img = "UnbreakableBrick.png"; }
                 drawImage(img, b.getX(), b.getY(), b.getWidth(), b.getHeight());
             }
         } else if (obj instanceof PowerUp) {
