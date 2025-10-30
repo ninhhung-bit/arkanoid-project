@@ -17,6 +17,9 @@ public class Game extends JPanel implements ActionListener {
     private boolean levelCompleted = false;
     private boolean paused = false;             // Trạng thái tạm dừng
     private boolean showingPauseMenu = false;   // Đang hiển thị menu tạm dừng
+    private int lives = 3;
+    private boolean gameOver = false;
+
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -152,6 +155,12 @@ public class Game extends JPanel implements ActionListener {
     }
 
     private void initGameObjects() {
+        if (gameOver) {
+            lives = 3;
+            gameOver = false;
+            ScoreBoard.resetScore();
+        }
+
         paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
 
         double baseSpeed = 150 + GameSettings.getSpeed() * 35;
@@ -184,6 +193,61 @@ public class Game extends JPanel implements ActionListener {
          * am thanh nen.
          */
         SoundManager.playBackground("sounds/background.wav");
+    }
+
+    private void resetBallAndPaddle() {
+        paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
+
+        double baseSpeed = 150 + GameSettings.getSpeed() * 35;
+        ball = new Ball(
+                paddle.getX() + paddle.getWidth() / 2 - 10,
+                paddle.getY() - 20,
+                10,
+                baseSpeed,
+                1,
+                -1
+        );
+    }
+
+    private void showScoreBoard() {
+        JFrame frame = new JFrame("Game Over");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("GAME OVER", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 30));
+        title.setForeground(Color.RED);
+
+        JLabel scoreLabel = new JLabel("Your Score: " + ScoreBoard.getScore(), SwingConstants.CENTER);
+        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        JPanel buttonPanel = new JPanel();
+        JButton retryButton = new JButton("Play Again");
+        JButton exitButton = new JButton("Main Menu");
+
+        retryButton.addActionListener(e -> {
+            frame.dispose();
+            lives = 3;
+            ScoreBoard.resetScore();
+            initGameObjects();
+            timer.start();
+        });
+
+        exitButton.addActionListener(e -> {
+            frame.dispose();
+            if (onGameOver != null)
+                SwingUtilities.invokeLater(onGameOver);
+        });
+
+        buttonPanel.add(retryButton);
+        buttonPanel.add(exitButton);
+
+        frame.add(title, BorderLayout.NORTH);
+        frame.add(scoreLabel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     @Override
@@ -266,27 +330,23 @@ public class Game extends JPanel implements ActionListener {
             }
         }
 
-        // Check Game Over
+        // Check mất mạng
         if (ball.isOutOfScreen()) {
-            timer.stop();
-            SoundManager.stopBackground();
+            lives--;
 
-            int choice = JOptionPane.showOptionDialog(this,
-                    "Bạn đã thua!",
-                    "Thua cuộc",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE,
-                    null,
-                    new String[]{"Thử lại", "Quay về Menu"},
-                    "Thử lại");
-
-            if (choice == JOptionPane.YES_OPTION) {
-                initGameObjects();
-                timer.start();
-            } else if (onGameOver != null) {
-                SwingUtilities.invokeLater(onGameOver);
+            if (lives > 0) {
+                // Còn mạng => reset bóng và paddle, chơi tiếp
+                SoundManager.playSound("sounds/lifelost.wav");
+                resetBallAndPaddle();
+            } else {
+                // Hết mạng => Game Over
+                gameOver = true;
+                timer.stop();
+                SoundManager.stopBackground();
+                showScoreBoard();
             }
         }
+
 
         // Kiểm tra xem còn viên gạch nào không
         boolean allDestroyed = true;
@@ -347,6 +407,7 @@ public class Game extends JPanel implements ActionListener {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Level " + currentLevel, 20, 30);
         g.drawString("Score: " + ScoreBoard.getScore(), 20, 60);
+        g.drawString("Lives: " + lives, 20, 90);
 
         //  Hiển thị menu tạm dừng overlay
         if (paused && showingPauseMenu) {
