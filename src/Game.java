@@ -418,7 +418,9 @@ public class Game extends JPanel implements ActionListener {
                         "Chúc mừng! Bạn đã hoàn thành tất cả 3 level!",
                         "Chiến thắng",
                         JOptionPane.INFORMATION_MESSAGE);
-                if (onGameOver != null) SwingUtilities.invokeLater(onGameOver);
+                if (onGameOver != null) {
+                    SwingUtilities.invokeLater(onGameOver);
+                }
             }
         }
 
