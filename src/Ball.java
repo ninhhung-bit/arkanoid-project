@@ -96,9 +96,11 @@ public class Ball extends MovableObject {
         if (getX() <= 0) {
             setX(0);
             directionX *= -1;
+            SoundManager.playSound("hitpaddle.wav");
         } else if (getX() >= screenWidth - getWidth()) {
             setX(screenWidth - getWidth());
             directionX *= -1;
+            SoundManager.playSound("hitpaddle.wav");
         }
 
         // Va chạm trần

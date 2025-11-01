@@ -22,7 +22,7 @@ public class OptionsMenu extends JDialog {
 
         // xử ký volume
         JLabel volumeLabel = new JLabel("Volume:");
-        volumeSlider = new JSlider(0, 100, 50);
+        volumeSlider = new JSlider(0, 200, 100);
         volumeSlider.setMajorTickSpacing(25);
         volumeSlider.setPaintTicks(true);
         volumeSlider.setPaintLabels(true);

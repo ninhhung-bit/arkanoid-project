@@ -1,11 +1,22 @@
-import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import javax.sound.sampled.*;
+
 
 
 public class SoundManager {
     private static FloatControl volumeControl;
     private static Clip backgroundClip;
+
+     private static AudioInputStream loadAudio(String path) throws Exception {
+        // Tải file âm thanh bằng ClassLoader (an toàn, không bị lỗi đường dẫn)
+        URL soundURL = SoundManager.class.getResource("/sounds/" + path);
+        if (soundURL == null) {
+            throw new IOException("Không tìm thấy file âm thanh: " + path);
+        }
+        return AudioSystem.getAudioInputStream(soundURL);
+    }
 
     /**
      * phat nhac nen.
@@ -41,7 +52,9 @@ public class SoundManager {
 
      public static void playSound(String path) {
         try {
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(path));
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(
+                SoundManager.class.getResource("/sounds/" + path)
+            );
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
 

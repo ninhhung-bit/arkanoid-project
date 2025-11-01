@@ -220,10 +220,11 @@ public class Game extends JPanel implements ActionListener {
         }
 
         levelCompleted = false;
+
         /**
          * am thanh nen.
          */
-        SoundManager.playBackground("sounds/background.wav");
+        SoundManager.playBackground("menu.wav");
     }
 
     private void resetBallAndPaddle() {
@@ -298,7 +299,7 @@ public class Game extends JPanel implements ActionListener {
             /**
              * am thanh dap vao paddle.
              */
-            SoundManager.playSound("sounds/hit.wav");
+            SoundManager.playSound("hitpaddle.wav");
         }
 
         // Ball - Brick collisions
@@ -320,10 +321,10 @@ public class Game extends JPanel implements ActionListener {
                 /**
                  * amthanh dap vao gach.
                  */
-                SoundManager.playSound("sounds/hit.wav");
+                SoundManager.playSound("hitbrick.wav");
 
-                // 10% drop chance for power-up
-                if (Math.random() < 0.1) {
+                // 15% drop chance for power-up
+                if (Math.random() < 0.15) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
@@ -355,6 +356,8 @@ public class Game extends JPanel implements ActionListener {
             p.update(dt);
 
             if (p.checkCollision(paddle)) {
+                SoundManager.playSound("powerup.wav");
+
                 p.applyEffect(paddle, ball);
                 powerUps.remove(p);
                 continue;
@@ -371,12 +374,14 @@ public class Game extends JPanel implements ActionListener {
 
             if (lives > 0) {
                 // Còn mạng => reset bóng và paddle, chơi tiếp
-                SoundManager.playSound("sounds/lifelost.wav");
+                SoundManager.playSound("lifelost.wav");
                 resetBallAndPaddle();
             } else {
                 // Hết mạng => Game Over
                 gameOver = true;
                 timer.stop();
+
+                SoundManager.playSound("gameover.wav");
                 SoundManager.stopBackground();
                 showScoreBoard();
             }
@@ -393,6 +398,9 @@ public class Game extends JPanel implements ActionListener {
         }
 
         if (allDestroyed && !levelCompleted) {
+
+            SoundManager.playSound("levelcomplete.wav");
+
             levelCompleted = true;
             timer.stop();
 
