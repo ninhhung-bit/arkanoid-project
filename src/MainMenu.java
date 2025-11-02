@@ -1,6 +1,6 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class MainMenu extends JPanel {
     private JButton playButton;
@@ -51,5 +51,7 @@ public class MainMenu extends JPanel {
         optionsButton.addActionListener(listener);
         exitButton.addActionListener(listener);
         leaderboardButton.addActionListener(listener); // gán listener
+
+        SoundManager.playBackground("menu.wav");
     }
 }

@@ -257,7 +257,7 @@ public class Game extends JPanel implements ActionListener {
          * nhac nen.
          */
         SoundManager.stopBackground();       // Dừng nhạc menu nếu còn phát
-        SoundManager.playBackground("menu.wav");
+        SoundManager.playBackground("ingame.wav");
 
     }
 

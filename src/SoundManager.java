@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.sound.sampled.*;
@@ -22,20 +21,23 @@ public class SoundManager {
      * phat nhac nen.
      */
     public static void playBackground(String path) {
-        stopBackground(); 
-        try {
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(path));
-            backgroundClip = AudioSystem.getClip();
-            backgroundClip.open(audioStream);
-            volumeControl = (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN);
-            setVolume(GameSettings.getVolume());          // lay volume hien tai
-            backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    stopBackground();
+    try {
+        // Dùng cùng cơ chế load như playSound()
+        AudioInputStream audioStream = loadAudio(path);
+        backgroundClip = AudioSystem.getClip();
+        backgroundClip.open(audioStream);
 
+        volumeControl = (FloatControl) backgroundClip.getControl(FloatControl.Type.MASTER_GAIN);
+        setVolume(GameSettings.getVolume());
+
+        backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
+        backgroundClip.start(); //chắc chắn clip chạy
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     /**
      * tat nhac nen.
      */
