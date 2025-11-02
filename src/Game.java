@@ -169,13 +169,24 @@ public class Game extends JPanel implements ActionListener {
 
         int cols = 5;
         int rows = (int) Math.ceil(totalBricks / (double) cols);
-        double brickW = WIDTH / (double) cols;
-        double brickH = 20;
+
+        // Kích thước gạch cố định
+        double brickW = 100; // giữ nguyên chiều rộng
+        double brickH = 20;  // giữ nguyên chiều cao
+        double spacingX = 4; // khoảng cách ngang giữa các gạch
+        double spacingY = 4; // khoảng cách dọc giữa các hàng
+        
+        // Tính toán vị trí bắt đầu để căn giữa theo chiều ngang
+        double totalWidth = cols * brickW + (cols - 1) * spacingX; // tổng chiều rộng của các gạch và khoảng cách
+        double startX = (WIDTH - totalWidth) / 2; // căn giữa bằng cách chia đều khoảng trống hai bên
+        double startY = 100; // giữ nguyên khoảng cách từ trên xuống
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 if (bricks.size() >= totalBricks) break;
-                bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, 1, "normal"));
+                double x = startX + c * (brickW + spacingX);
+                double y = startY + r * (brickH + spacingY);
+                bricks.add(new Brick(x, y, brickW, brickH, 1, "normal"));
             }
         }
 
@@ -224,7 +235,7 @@ public class Game extends JPanel implements ActionListener {
                 SoundManager.playSound("sounds/hit.wav");
 
                 // 10% drop chance for power-up
-                if (Math.random() < 0.1) {
+                if (Math.random() < 0.3) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
