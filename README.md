@@ -1,10 +1,25 @@
-# arkanoid-project
-Bài tập lớn OOP - Game Arkanoid
+Danh sách nhóm:
+- Nguyễn Thế An (Nhóm trưởng):
+- Nguyễn Đức Mạnh:
+- Ninh Ngọc Hưng:
+- Nguyễn Hoàng Thái Dương:
 
-- Khi vào giao diện sẽ có các lựa chọn chơi game, hoặc các lựa chọn khác bao gồm như là độ khó, tốc độ bóng, quay trở lại menu và level của trò chơi. Ngoài ra còn nút exit để đóng trò chơi.
+Thiết kế:
 
-- Khi ta chọn chơi, dao diện gồm quả bóng, 1 thanh ngang điều khiển bằng các nút di chuyển, tâng quả bóng để phá vỡ các tầng gạch phía trên.
+Video: https://drive.google.com/file/d/1HaK3a3KgKZ8IeV_QVfYwePKOmaSwteLM/view?usp=drivesdk
 
-- Ta có thể điều chỉnh tốc độ của quả bóng trong phần option, và có thể điều chỉnh độ lớn âm thanh của trò chơi.
+PowerUps:
+- ExpandPaddlePowerUp ![ExpandPaddlePowerUp](src/images/ExpandPaddlePowerUp.png): Tăng chiều dài paddle
+- ShrinkPaddlePowerUp ![ShrinkPaddlePowerUp](src/images/ShrinkPaddlePowerUp.png): Giảm chiều dài paddle
+- SpeedUpPaddlePowerUp ![SpeedUpPaddlePowerUp](src/images/SpeedUpPaddlePowerUp.png): Tăng tốc độ paddle
+- SlowPaddlePowerUp ![SlowPaddlePowerUp](src/images/SlowPaddlePowerUp.png): Giảm tốc độ paddle
+- FastBallPowerUp ![FastBallPowerUp](src/images/FastBallPowerUp.png): Tăng tốc độ bóng
+- SlowBallPowerUp ![SlowBallPowerUp](src/images/SlowBallPowerUp.png): Giảm tốc độ bóng
+- ReverseControlPowerUp ![ReverseControlPowerUp](src/images/ReverseControlPowerUp.png): Đảo ngược di chuyển paddle
+- DeathPowerUp ![DeathPowerUp](src/images/DeathPowerUp.png): Mất 1 mạng
+- PiercingPowerUp ![PiercingPowerUp](src/images/PiercingPowerUp.png): Giúp bóng xuyên qua mọi vật thể
 
-- Các level có thể nhiều gạch hơn, hoặc mỗi viên gạch cần va nhiều lần mới vỡ đc.
+Bricks:
+- NocmalBrick ![NocmalBrick](src/images/NocmalBrick.png): Có 1 máu
+- StrongBrick ![StrongBrick](src/images/StrongBrick.png): Có 2 máu
+- UnbreakableBrick ![UnbreakableBrick](src/images/UnbreakableBrick.png): Không thể bị phá hủy
