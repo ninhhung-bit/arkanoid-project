@@ -70,6 +70,6 @@ public class Leaderboard {
 
     public void clear() {
         scores.clear();
-        save(); // ghi lại file trống
+        save();
     }
 }
