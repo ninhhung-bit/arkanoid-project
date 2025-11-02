@@ -28,6 +28,16 @@ public class Game extends JPanel implements ActionListener {
         this(null);
     }
 
+    public void decreaseLives() {
+        lives--;
+        if (lives <= 0) {
+            gameOver = true;
+            if (onGameOver != null) {
+                onGameOver.run();
+            }
+        }
+    }
+
     public Game(Runnable onGameOver) {
         this.onGameOver = onGameOver;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -231,6 +241,7 @@ public class Game extends JPanel implements ActionListener {
 
     private void resetBallAndPaddle() {
         paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
+        paddle.setGame(this);
 
         double baseSpeed = 150 + GameSettings.getSpeed() * 35;
         ball = new Ball(
@@ -341,6 +352,7 @@ public class Game extends JPanel implements ActionListener {
                         case 5: powerUp = new SlowBallPowerUp(brickX, brickY); break;
                         case 6: powerUp = new ReverseControlPowerUp(brickX, brickY); break;
                         case 7: powerUp = new PiercingPowerUp(brickX, brickY); break;
+                        case 8: powerUp = new DeathPowerUp(brickX, brickY); break;
                         default: break;
                     }
 

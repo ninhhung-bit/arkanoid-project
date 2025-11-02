@@ -1,5 +1,6 @@
 public class Paddle extends MovableObject {
     protected double speed;
+    protected Game game;
     public static final double screenWidth = 800;
     public static final double screenHeight = 600;
 
@@ -28,6 +29,9 @@ public class Paddle extends MovableObject {
     }
 
     public double getSpeed() { return speed; }
+    
+    public Game getGame() { return game; }
+    public void setGame(Game game) { this.game = game; }
     public void setSpeed(double speed) { this.speed = speed; }
 
     public String getCurrentPowerUp() { return currentPowerUp; }
