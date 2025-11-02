@@ -5,11 +5,14 @@ public class DeathPowerUp extends PowerUp {
 
     @Override
     public void applyEffect(Paddle paddle, Ball ball) {
-        super.applyEffect(paddle, ball);
-        // Find the Game instance - we'll need to modify Game class
+        // When collected, immediately end the game and exit the program
         if (paddle != null && paddle.getGame() != null) {
-            paddle.getGame().decreaseLives();
+            paddle.getGame().endGameAndExit();
+        } else {
+            // Fallback: play game over sound and exit
+            SoundManager.playSound("gameover.wav");
+            SoundManager.stopBackground();
+            System.exit(0);
         }
-        SoundManager.playSound("powerup.wav");
     }
 }

@@ -38,6 +38,22 @@ public class Game extends JPanel implements ActionListener {
         }
     }
 
+    // Immediately end the game and exit the application.
+    public void endGameAndExit() {
+        gameOver = true;
+        if (timer != null) {
+            timer.stop();
+        }
+        try {
+            SoundManager.playSound("gameover.wav");
+            SoundManager.stopBackground();
+        } catch (Exception ex) {
+            // ignore sound errors
+        }
+        // Exit JVM so user must restart to play again
+        System.exit(0);
+    }
+
     public Game(Runnable onGameOver) {
         this.onGameOver = onGameOver;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -369,7 +385,7 @@ public class Game extends JPanel implements ActionListener {
                 SoundManager.playSound("hitpaddle.wav");
 
                 // 15% drop chance for power-up
-                if (Math.random() < 0.15) {
+                if (Math.random() < 1) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
