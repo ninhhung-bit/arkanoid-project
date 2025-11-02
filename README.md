@@ -20,6 +20,6 @@ PowerUps:
 - PiercingPowerUp ![PiercingPowerUp](src/images/PiercingPowerUp.png): Giúp bóng xuyên qua mọi vật thể
 
 Bricks:
-- NocmalBrick ![NocmalBrick](src/images/NocmalBrick.png): Có 1 máu
+- NormalBrick ![NormalBrick](src/images/NormalBrick.png): Có 1 máu
 - StrongBrick ![StrongBrick](src/images/StrongBrick.png): Có 2 máu
 - UnbreakableBrick ![UnbreakableBrick](src/images/UnbreakableBrick.png): Không thể bị phá hủy
