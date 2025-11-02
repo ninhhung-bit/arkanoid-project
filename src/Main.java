@@ -24,6 +24,9 @@ public class Main {
                         OptionsMenu optionsMenu = new OptionsMenu(frame);
                         optionsMenu.setVisible(true);
                     }
+                    else if ("leaderboard".equals(cmd)) {
+                        LeaderboardMenu.showLeaderboard(frame, this);
+                    }
                     else if ("exit".equals(cmd)) {
                         System.exit(0);
                     }
