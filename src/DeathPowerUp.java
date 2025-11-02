@@ -5,11 +5,11 @@ public class DeathPowerUp extends PowerUp {
 
     @Override
     public void applyEffect(Paddle paddle, Ball ball) {
-        // When collected, immediately end the game and exit the program
+        // Khi paddle lấy được DeathPowerUp, kết thúc trò chơi ngay lập tức
         if (paddle != null && paddle.getGame() != null) {
             paddle.getGame().endGameAndExit();
         } else {
-            // Fallback: play game over sound and exit
+            // Âm thanh dự phòng và thoát chương trình
             SoundManager.playSound("gameover.wav");
             SoundManager.stopBackground();
             System.exit(0);

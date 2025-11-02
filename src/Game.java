@@ -202,20 +202,20 @@ public class Game extends JPanel implements ActionListener {
         bricks.clear();
         powerUps.clear();
 
-        // ---- Brick layout configuration (change these to adjust layout) ----
-        int cols = 5;                // number of columns
-        int rows;                    // will be set per level
-        double desiredBrickW = 100;  // preferred brick width (px)
-        double brickH = 20;          // brick height (px)
-        double spacingX = 6;         // horizontal gap between bricks (px)
-        double spacingY = 6;         // vertical gap between bricks (px)
-        double margin = 20;          // left/right margins (px)
-        double startY = 50;          // top margin where bricks start
+        // tùy chỉnh bố cục gạch
+        int cols = 5;                // số cột
+        int rows;                    // hàng sẽ được thiết lập theo level
+        double desiredBrickW = 100;  // chiều rộng gạch 
+        double brickH = 20;          // chiều cao gạch
+        double spacingX = 6;         // khoảng cách trái phải giữa các gạch
+        double spacingY = 6;         // khoảng cách trên dưới giữa các gạch
+        double margin = 20;          // lề trái/phải
+        double startY = 50;          // lề trên nơi bắt đầu gạch
 
-        // compute brick width so that columns + spacing fit the screen and center them
+        // tính toán để căn giữa các viên gạch nếu có chỗ trống
         double availableWidth = WIDTH - 2 * margin;
         double brickW = (availableWidth - (cols - 1) * spacingX) / cols;
-        // if desired fits smaller than computed area, use desired width and re-center
+        // nếu muốn vừa với diện tích nhỏ hơn diện tích tính toán, hãy sử dụng chiều rộng mong muốn và căn giữa lại
         if (desiredBrickW < brickW) {
             brickW = desiredBrickW;
         }
@@ -235,7 +235,7 @@ public class Game extends JPanel implements ActionListener {
             }
         }
         else if (currentLevel == 2) {
-            rows = 6; // mix of strong and normal
+            rows = 6; // kết hợp gạch mạnh và thường 
             for (int r = 0; r < rows; r++) {
                 String type = (r % 2 == 0) ? "strong" : "normal";
                 int hp = type.equals("strong") ? 2 : 1;
@@ -384,7 +384,7 @@ public class Game extends JPanel implements ActionListener {
                 // Sound
                 SoundManager.playSound("hitpaddle.wav");
 
-                // 15% drop chance for power-up
+                // tùy chỉnh cơ hội rơi power-up
                 if (Math.random() < 1) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
