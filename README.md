@@ -7,7 +7,7 @@ Danh sách nhóm:
 
 - Nguyễn Hoàng Thái Dương (20%): leaderboard, images, unbreakblebrick, buton, life in game, level select
 
-Thiết kế:
+Link UML: https://drive.google.com/drive/folders/10dI54AoYmhi1xyr968BYaEV28EnbBDeM?usp=drive_link
 
 Video: https://drive.google.com/file/d/1HaK3a3KgKZ8IeV_QVfYwePKOmaSwteLM/view?usp=drivesdk
 
@@ -26,5 +26,3 @@ Bricks:
 - NormalBrick ![NormalBrick](src/images/NormalBrick.png): Có 1 máu
 - StrongBrick ![StrongBrick](src/images/StrongBrick.png): Có 2 máu
 - UnbreakableBrick ![UnbreakableBrick](src/images/UnbreakableBrick.png): Không thể bị phá hủy
-
-Link UML: https://drive.google.com/drive/folders/10dI54AoYmhi1xyr968BYaEV28EnbBDeM?usp=drive_link 
