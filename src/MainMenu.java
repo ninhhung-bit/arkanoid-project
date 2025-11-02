@@ -1,6 +1,6 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class MainMenu extends JPanel {
     private JButton playButton;
@@ -40,5 +40,7 @@ public class MainMenu extends JPanel {
         playButton.addActionListener(listener);
         optionsButton.addActionListener(listener);
         exitButton.addActionListener(listener);
+
+        SoundManager.playBackground("menu.mp3");
     }
 }

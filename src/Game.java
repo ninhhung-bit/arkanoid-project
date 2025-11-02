@@ -17,6 +17,9 @@ public class Game extends JPanel implements ActionListener {
     private boolean levelCompleted = false;
     private boolean paused = false;             // Trạng thái tạm dừng
     private boolean showingPauseMenu = false;   // Đang hiển thị menu tạm dừng
+    private int lives = 3;
+    private boolean gameOver = false;
+
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -152,6 +155,12 @@ public class Game extends JPanel implements ActionListener {
     }
 
     private void initGameObjects() {
+        if (gameOver) {
+            lives = 3;
+            gameOver = false;
+            ScoreBoard.resetScore();
+        }
+
         paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
 
         double baseSpeed = 150 + GameSettings.getSpeed() * 35;
@@ -168,33 +177,111 @@ public class Game extends JPanel implements ActionListener {
         powerUps.clear();
 
         int cols = 5;
-        int rows = (int) Math.ceil(totalBricks / (double) cols);
+        int rows;
+        double brickW = WIDTH / (double) cols;
+        double brickH = 20;
 
-        // Kích thước gạch cố định
-        double brickW = 100; // giữ nguyên chiều rộng
-        double brickH = 20;  // giữ nguyên chiều cao
-        double spacingX = 4; // khoảng cách ngang giữa các gạch
-        double spacingY = 4; // khoảng cách dọc giữa các hàng
-        
-        // Tính toán vị trí bắt đầu để căn giữa theo chiều ngang
-        double totalWidth = cols * brickW + (cols - 1) * spacingX; // tổng chiều rộng của các gạch và khoảng cách
-        double startX = (WIDTH - totalWidth) / 2; // căn giữa bằng cách chia đều khoảng trống hai bên
-        double startY = 100; // giữ nguyên khoảng cách từ trên xuống
+// Thiết lập số hàng và loại gạch theo level
+        if (currentLevel == 1) {
+            rows = 4;
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < cols; c++) {
+                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, 1, "normal"));
+                }
+            }
+        }
+        else if (currentLevel == 2) {
+            rows = 6; // 3 hàng strong xen 3 hàng normal
+            for (int r = 0; r < rows; r++) {
+                String type = (r % 2 == 0) ? "strong" : "normal";
+                int hp = type.equals("strong") ? 2 : 1;
+                for (int c = 0; c < cols; c++) {
+                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, hp, type));
+                }
+            }
+        }
+        else if (currentLevel == 3) {
+            rows = 8; // 8 hàng
+            for (int r = 0; r < rows; r++) {
+                String type = (r % 2 == 0) ? "strong" : "normal";
+                int hp = type.equals("strong") ? 2 : 1;
+                for (int c = 0; c < cols; c++) {
+                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, hp, type));
+                }
+            }
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (bricks.size() >= totalBricks) break;
-                double x = startX + c * (brickW + spacingX);
-                double y = startY + r * (brickH + spacingY);
-                bricks.add(new Brick(x, y, brickW, brickH, 1, "normal"));
+            // 4 viên UnbreakableBrick ở hàng cuối (row 7)
+            int lastRow = rows - 1; // row 7
+            for (int c = 0; c < Math.min(4, cols); c++) { // 4 viên
+                int idx = lastRow * cols + c;
+                Brick b = bricks.get(idx);
+                bricks.set(idx, new UnbreakableBrick(b.getX(), b.getY(), b.getWidth(), b.getHeight()));
             }
         }
 
         levelCompleted = false;
+
         /**
-         * am thanh nen.
+         * nhac nen.
          */
-        SoundManager.playBackground("sounds/background.wav");
+        SoundManager.stopBackground();       // Dừng nhạc menu nếu còn phát
+        SoundManager.playBackground("ingame.wav");
+
+    }
+
+    private void resetBallAndPaddle() {
+        paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
+
+        double baseSpeed = 150 + GameSettings.getSpeed() * 35;
+        ball = new Ball(
+                paddle.getX() + paddle.getWidth() / 2 - 10,
+                paddle.getY() - 20,
+                10,
+                baseSpeed,
+                1,
+                -1
+        );
+    }
+
+    private void showScoreBoard() {
+        JFrame frame = new JFrame("Game Over");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("GAME OVER", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 30));
+        title.setForeground(Color.RED);
+
+        JLabel scoreLabel = new JLabel("Your Score: " + ScoreBoard.getScore(), SwingConstants.CENTER);
+        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        JPanel buttonPanel = new JPanel();
+        JButton retryButton = new JButton("Play Again");
+        JButton exitButton = new JButton("Main Menu");
+
+        retryButton.addActionListener(e -> {
+            frame.dispose();
+            lives = 3;
+            ScoreBoard.resetScore();
+            initGameObjects();
+            timer.start();
+        });
+
+        exitButton.addActionListener(e -> {
+            frame.dispose();
+            if (onGameOver != null)
+                SwingUtilities.invokeLater(onGameOver);
+        });
+
+        buttonPanel.add(retryButton);
+        buttonPanel.add(exitButton);
+
+        frame.add(title, BorderLayout.NORTH);
+        frame.add(scoreLabel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     @Override
@@ -214,28 +301,32 @@ public class Game extends JPanel implements ActionListener {
             /**
              * am thanh dap vao paddle.
              */
-            SoundManager.playSound("sounds/hit.wav");
+            SoundManager.playSound("hitpaddle.wav");
         }
 
         // Ball - Brick collisions
         for (Brick b : new ArrayList<>(bricks)) {
             if (!b.isDestroyed() && ball.checkCollision(b)) {
-                b.setDestroyed(true);
+                // Gọi takeHit() để trừ máu nếu không phải unbreakable
+                if (!"unbreakable".equalsIgnoreCase(b.getType())) {
+                    b.takeHit();
+                    if (b.isDestroyed()) {
+                        ScoreBoard.addBrickPoints();
+                    }
+                }
 
+                // Bóng nảy lại (nếu không xuyên)
                 if (!ball.isPiercing()) {
                     ball.bounceOff(b);
                 }
 
-                // Cập nhật điểm số khi phá gạch
-                ScoreBoard.addBrickPoints();
-
                 /**
                  * amthanh dap vao gach.
                  */
-                SoundManager.playSound("sounds/hit.wav");
+                SoundManager.playSound("hitpaddle.wav");
 
-                // 10% drop chance for power-up
-                if (Math.random() < 0.3) {
+                // 15% drop chance for power-up
+                if (Math.random() < 0.15) {
                     PowerUp powerUp = null;
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
@@ -267,6 +358,8 @@ public class Game extends JPanel implements ActionListener {
             p.update(dt);
 
             if (p.checkCollision(paddle)) {
+                SoundManager.playSound("powerup.wav");
+
                 p.applyEffect(paddle, ball);
                 powerUps.remove(p);
                 continue;
@@ -277,27 +370,25 @@ public class Game extends JPanel implements ActionListener {
             }
         }
 
-        // Check Game Over
+        // Check mất mạng
         if (ball.isOutOfScreen()) {
-            timer.stop();
-            SoundManager.stopBackground();
+            lives--;
 
-            int choice = JOptionPane.showOptionDialog(this,
-                    "Bạn đã thua!",
-                    "Thua cuộc",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE,
-                    null,
-                    new String[]{"Thử lại", "Quay về Menu"},
-                    "Thử lại");
+            if (lives > 0) {
+                // Còn mạng => reset bóng và paddle, chơi tiếp
+                SoundManager.playSound("lifelost.wav");
+                resetBallAndPaddle();
+            } else {
+                // Hết mạng => Game Over
+                gameOver = true;
+                timer.stop();
 
-            if (choice == JOptionPane.YES_OPTION) {
-                initGameObjects();
-                timer.start();
-            } else if (onGameOver != null) {
-                SwingUtilities.invokeLater(onGameOver);
+                SoundManager.playSound("gameover.wav");
+                SoundManager.stopBackground();
+                showScoreBoard();
             }
         }
+
 
         // Kiểm tra xem còn viên gạch nào không
         boolean allDestroyed = true;
@@ -309,6 +400,9 @@ public class Game extends JPanel implements ActionListener {
         }
 
         if (allDestroyed && !levelCompleted) {
+
+            SoundManager.playSound("levelcomplete.wav");
+
             levelCompleted = true;
             timer.stop();
 
@@ -334,7 +428,9 @@ public class Game extends JPanel implements ActionListener {
                         "Chúc mừng! Bạn đã hoàn thành tất cả 3 level!",
                         "Chiến thắng",
                         JOptionPane.INFORMATION_MESSAGE);
-                if (onGameOver != null) SwingUtilities.invokeLater(onGameOver);
+                if (onGameOver != null) {
+                    SwingUtilities.invokeLater(onGameOver);
+                }
             }
         }
 
@@ -358,6 +454,7 @@ public class Game extends JPanel implements ActionListener {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Level " + currentLevel, 20, 30);
         g.drawString("Score: " + ScoreBoard.getScore(), 20, 60);
+        g.drawString("Lives: " + lives, 20, 90);
 
         //  Hiển thị menu tạm dừng overlay
         if (paused && showingPauseMenu) {

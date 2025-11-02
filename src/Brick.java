@@ -42,7 +42,8 @@ public class Brick extends GameObject {
     public void render(Renderer rd) {
         if (!destroyed) {
             String img = "NormalBrick.png";
-            if ("strong".equalsIgnoreCase(type)) img = "StrongBrick.png";
+            if ("strong".equalsIgnoreCase(type)) { img = "StrongBrick.png"; }
+            else if ("unbreakable".equalsIgnoreCase(type)) { img = "UnbreakableBrick.png"; }
             rd.drawImage(img, getX(), getY(), getWidth(), getHeight());
         }
     }
