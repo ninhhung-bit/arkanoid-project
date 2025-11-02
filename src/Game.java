@@ -186,43 +186,65 @@ public class Game extends JPanel implements ActionListener {
         bricks.clear();
         powerUps.clear();
 
-        int cols = 5;
-        int rows;
-        double brickW = WIDTH / (double) cols;
-        double brickH = 20;
+        // ---- Brick layout configuration (change these to adjust layout) ----
+        int cols = 5;                // number of columns
+        int rows;                    // will be set per level
+        double desiredBrickW = 100;  // preferred brick width (px)
+        double brickH = 20;          // brick height (px)
+        double spacingX = 6;         // horizontal gap between bricks (px)
+        double spacingY = 6;         // vertical gap between bricks (px)
+        double margin = 20;          // left/right margins (px)
+        double startY = 50;          // top margin where bricks start
 
-// Thiết lập số hàng và loại gạch theo level
+        // compute brick width so that columns + spacing fit the screen and center them
+        double availableWidth = WIDTH - 2 * margin;
+        double brickW = (availableWidth - (cols - 1) * spacingX) / cols;
+        // if desired fits smaller than computed area, use desired width and re-center
+        if (desiredBrickW < brickW) {
+            brickW = desiredBrickW;
+        }
+        double totalWidth = cols * brickW + (cols - 1) * spacingX;
+        double startX = (WIDTH - totalWidth) / 2.0;
+        // --------------------------------------------------------------------
+
+        // Thiết lập số hàng và loại gạch theo level
         if (currentLevel == 1) {
             rows = 4;
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < cols; c++) {
-                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, 1, "normal"));
+                    double x = startX + c * (brickW + spacingX);
+                    double y = startY + r * (brickH + spacingY);
+                    bricks.add(new Brick(x, y, brickW, brickH, 1, "normal"));
                 }
             }
         }
         else if (currentLevel == 2) {
-            rows = 6; // 3 hàng strong xen 3 hàng normal
+            rows = 6; // mix of strong and normal
             for (int r = 0; r < rows; r++) {
                 String type = (r % 2 == 0) ? "strong" : "normal";
                 int hp = type.equals("strong") ? 2 : 1;
                 for (int c = 0; c < cols; c++) {
-                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, hp, type));
+                    double x = startX + c * (brickW + spacingX);
+                    double y = startY + r * (brickH + spacingY);
+                    bricks.add(new Brick(x, y, brickW, brickH, hp, type));
                 }
             }
         }
         else if (currentLevel == 3) {
-            rows = 8; // 8 hàng
+            rows = 8; // 8 rows
             for (int r = 0; r < rows; r++) {
                 String type = (r % 2 == 0) ? "strong" : "normal";
                 int hp = type.equals("strong") ? 2 : 1;
                 for (int c = 0; c < cols; c++) {
-                    bricks.add(new Brick(c * brickW, 50 + r * (brickH + 5), brickW - 4, brickH, hp, type));
+                    double x = startX + c * (brickW + spacingX);
+                    double y = startY + r * (brickH + spacingY);
+                    bricks.add(new Brick(x, y, brickW, brickH, hp, type));
                 }
             }
 
-            // 4 viên UnbreakableBrick ở hàng cuối (row 7)
-            int lastRow = rows - 1; // row 7
-            for (int c = 0; c < Math.min(4, cols); c++) { // 4 viên
+            // 4 Unbreakable bricks in last row
+            int lastRow = rows - 1;
+            for (int c = 0; c < Math.min(4, cols); c++) {
                 int idx = lastRow * cols + c;
                 Brick b = bricks.get(idx);
                 bricks.set(idx, new UnbreakableBrick(b.getX(), b.getY(), b.getWidth(), b.getHeight()));
@@ -316,8 +338,34 @@ public class Game extends JPanel implements ActionListener {
         }
 
         // Ball - Brick collisions
+        // Collect all bricks currently colliding with the ball and handle only the nearest one
+        java.util.List<Brick> collided = new java.util.ArrayList<>();
         for (Brick b : new ArrayList<>(bricks)) {
             if (!b.isDestroyed() && ball.checkCollision(b)) {
+                collided.add(b);
+            }
+        }
+
+        if (!collided.isEmpty()) {
+            // choose nearest by center distance
+            Brick nearest = null;
+            double bestDistSq = Double.MAX_VALUE;
+            double bx = ball.getX() + ball.getWidth() / 2.0;
+            double by = ball.getY() + ball.getHeight() / 2.0;
+            for (Brick b : collided) {
+                double cx = b.getX() + b.getWidth() / 2.0;
+                double cy = b.getY() + b.getHeight() / 2.0;
+                double dx = bx - cx;
+                double dy = by - cy;
+                double dsq = dx * dx + dy * dy;
+                if (dsq < bestDistSq) {
+                    bestDistSq = dsq;
+                    nearest = b;
+                }
+            }
+
+            if (nearest != null) {
+                Brick b = nearest;
                 // Gọi takeHit() để trừ máu nếu không phải unbreakable
                 if (!"unbreakable".equalsIgnoreCase(b.getType())) {
                     b.takeHit();
@@ -331,9 +379,7 @@ public class Game extends JPanel implements ActionListener {
                     ball.bounceOff(b);
                 }
 
-                /**
-                 * amthanh dap vao gach.
-                 */
+                // Sound
                 SoundManager.playSound("hitpaddle.wav");
 
                 // 15% drop chance for power-up
@@ -342,7 +388,7 @@ public class Game extends JPanel implements ActionListener {
                     double brickX = b.getX() + b.getWidth() / 2 - 10;
                     double brickY = b.getY() + b.getHeight() / 2 - 10;
 
-                    int rand = (int) (Math.random() * 8);
+                    int rand = (int) (Math.random() * 9); // include new death powerup
                     switch (rand) {
                         case 0: powerUp = new ExpandPaddlePowerUp(brickX, brickY); break;
                         case 1: powerUp = new ShrinkPaddlePowerUp(brickX, brickY); break;
@@ -357,10 +403,9 @@ public class Game extends JPanel implements ActionListener {
                     }
 
                     if (powerUp != null) {
-                    powerUps.add(powerUp);
-                    // Cập nhật điểm số khi tạo powerup
-                    ScoreBoard.addPowerUpPoints();
-                }
+                        powerUps.add(powerUp);
+                        ScoreBoard.addPowerUpPoints();
+                    }
                 }
             }
         }
