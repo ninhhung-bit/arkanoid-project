@@ -1,6 +1,6 @@
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 
 public class ScoreBoard {
     private static int score = 0;
@@ -23,9 +23,9 @@ public class ScoreBoard {
         return score;
     }
 
-    public static void render(GraphicsContext gc) {
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", 20));
-        gc.fillText("Score: " + score, 10, 25);
+    public static void render(Graphics2D g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Score: " + score, 10, 25);
     }
 }
