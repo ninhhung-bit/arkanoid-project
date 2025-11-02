@@ -1,7 +1,7 @@
 public class ReverseControlPowerUp extends PowerUp {
     public ReverseControlPowerUp(double x, double y) {
         super(x, y, 20, 20, "reverse", 10);
-        this.imageName = "ReversePaddle.png"; // 🟡 Ảnh riêng cho powerup
+        this.imageName = "ReverseControlPowerUp.png"; // 🟡 Ảnh riêng cho powerup
     }
 
     @Override

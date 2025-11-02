@@ -17,6 +17,6 @@ public class PiercingPowerUp extends PowerUp {
 
     @Override
     public void render(Renderer rd) {
-        rd.drawImage("PiercingBallPowerUp.png", getX(), getY(), getWidth(), getHeight());
+        rd.drawImage("PiercingPowerUp.png", getX(), getY(), getWidth(), getHeight());
     }
 }
