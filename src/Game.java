@@ -19,7 +19,7 @@ public class Game extends JPanel implements ActionListener {
     private boolean showingPauseMenu = false;   // Đang hiển thị menu tạm dừng
     private int lives = 3;
     private boolean gameOver = false;
-
+    private Leaderboard leaderboard = new Leaderboard();
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -241,42 +241,28 @@ public class Game extends JPanel implements ActionListener {
     }
 
     private void showScoreBoard() {
-        JFrame frame = new JFrame("Game Over");
-        frame.setSize(400, 300);
+        // Nhập tên người chơi
+        String playerName = JOptionPane.showInputDialog(this, "Enter your name:", "Game Over", JOptionPane.PLAIN_MESSAGE);
+        if (playerName == null || playerName.isEmpty()) {
+            playerName = "Anonymous";
+        }
+
+        // Lưu điểm vào leaderboard
+        leaderboard.addScore(playerName, ScoreBoard.getScore());
+
+        // Hiển thị menu leaderboard
+        JFrame frame = new JFrame("Leaderboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 600);
         frame.setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("GAME OVER", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 30));
-        title.setForeground(Color.RED);
-
-        JLabel scoreLabel = new JLabel("Your Score: " + ScoreBoard.getScore(), SwingConstants.CENTER);
-        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-
-        JPanel buttonPanel = new JPanel();
-        JButton retryButton = new JButton("Play Again");
-        JButton exitButton = new JButton("Main Menu");
-
-        retryButton.addActionListener(e -> {
-            frame.dispose();
-            lives = 3;
-            ScoreBoard.resetScore();
-            initGameObjects();
-            timer.start();
-        });
-
-        exitButton.addActionListener(e -> {
+        LeaderboardMenu lbMenu = new LeaderboardMenu(leaderboard, () -> {
             frame.dispose();
             if (onGameOver != null)
                 SwingUtilities.invokeLater(onGameOver);
         });
 
-        buttonPanel.add(retryButton);
-        buttonPanel.add(exitButton);
-
-        frame.add(title, BorderLayout.NORTH);
-        frame.add(scoreLabel, BorderLayout.CENTER);
-        frame.add(buttonPanel, BorderLayout.SOUTH);
+        frame.add(lbMenu);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
