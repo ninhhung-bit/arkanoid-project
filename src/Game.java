@@ -222,9 +222,11 @@ public class Game extends JPanel implements ActionListener {
         levelCompleted = false;
 
         /**
-         * am thanh nen.
+         * nhac nen.
          */
-        SoundManager.playBackground("menu.wav");
+        SoundManager.stopBackground();       // Dừng nhạc menu nếu còn phát
+        SoundManager.playBackground("ingame.wav");
+
     }
 
     private void resetBallAndPaddle() {
@@ -321,7 +323,7 @@ public class Game extends JPanel implements ActionListener {
                 /**
                  * amthanh dap vao gach.
                  */
-                SoundManager.playSound("hitbrick.wav");
+                SoundManager.playSound("hitpaddle.wav");
 
                 // 15% drop chance for power-up
                 if (Math.random() < 0.15) {

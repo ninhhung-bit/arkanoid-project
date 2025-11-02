@@ -107,6 +107,7 @@ public class Ball extends MovableObject {
         if (getY() <= 0) {
             setY(0);
             directionY *= -1;
+            SoundManager.playSound("hitpaddle.wav");
         }
     }
 
