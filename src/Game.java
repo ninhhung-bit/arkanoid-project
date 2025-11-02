@@ -11,7 +11,9 @@ public class Game extends JPanel implements ActionListener {
     private Paddle paddle;
     private List<Brick> bricks = new ArrayList<>();
     private List<PowerUp> powerUps = new ArrayList<>();
-    private List<PowerUp> activeBallPowerUps = new ArrayList<>();
+    // single currently active timed power-up (non-instant). Game enforces last-one-wins.
+    private PowerUp activePowerUp = null;
+    private double activePowerUpRemaining = 0.0; // seconds
     private int currentLevel = 1;
     private int totalBricks = 20;
     private boolean levelCompleted = false;
@@ -201,6 +203,8 @@ public class Game extends JPanel implements ActionListener {
 
         bricks.clear();
         powerUps.clear();
+    activePowerUp = null;
+    activePowerUpRemaining = 0.0;
 
         // tùy chỉnh bố cục gạch
         int cols = 5;                // số cột
@@ -280,6 +284,8 @@ public class Game extends JPanel implements ActionListener {
     private void resetBallAndPaddle() {
         paddle = new Paddle(WIDTH / 2 - 80, HEIGHT - 50, 600);
         paddle.setGame(this);
+        activePowerUp = null;
+        activePowerUpRemaining = 0.0;
 
         double baseSpeed = 150 + GameSettings.getSpeed() * 35;
         ball = new Ball(
@@ -419,13 +425,38 @@ public class Game extends JPanel implements ActionListener {
             if (p.checkCollision(paddle)) {
                 SoundManager.playSound("powerup.wav");
 
-                p.applyEffect(paddle, ball);
+                // Remove from falling list
                 powerUps.remove(p);
+
+                double dur = p.getDuration();
+                if (dur > 0) {
+                    // timed power-up: replace any existing timed power-up
+                    if (activePowerUp != null) {
+                        try { activePowerUp.removeEffect(paddle, ball); } catch (Exception ex) { }
+                    }
+                    activePowerUp = p;
+                    activePowerUpRemaining = dur;
+                    try { p.applyEffect(paddle, ball); } catch (Exception ex) { }
+                } else {
+                    // instant effect (no duration)
+                    try { p.applyEffect(paddle, ball); } catch (Exception ex) { }
+                }
+
                 continue;
             }
 
             if (p.isOutOfScreen()) {
                 powerUps.remove(p);
+            }
+        }
+
+        // Update active timed power-up (single last-one-wins)
+        if (activePowerUp != null) {
+            activePowerUpRemaining -= dt;
+            if (activePowerUpRemaining <= 0) {
+                try { activePowerUp.removeEffect(paddle, ball); } catch (Exception ex) { }
+                activePowerUp = null;
+                activePowerUpRemaining = 0.0;
             }
         }
 

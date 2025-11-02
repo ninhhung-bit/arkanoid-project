@@ -29,7 +29,7 @@ public class PowerUp extends GameObject {
     }
 
     public void removeEffect(Paddle paddle, Ball ball) {
-        if (paddle != null) paddle.resetPaddle();
+        if (paddle != null) paddle.clearActivePowerUp();
     }
 
     @Override
